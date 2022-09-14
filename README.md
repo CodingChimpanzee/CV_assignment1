@@ -6,7 +6,7 @@ Programming assignment 1 for computer vision course.
 * numpy, openCV is used in this project
 
 ## Usage
-'''bash
+```bash
 # install dependencies
 pip install numpy
 pip install opencv-python
@@ -16,7 +16,7 @@ sudo apt-get install libglib2.0-0
 # run codes
 python3 problem1.py
 python3 problem2.py
-'''
+```
 
 ## Components
 * HR.png: Groud-truth image
