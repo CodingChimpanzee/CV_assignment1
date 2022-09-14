@@ -19,3 +19,6 @@ I_gt = cv2.imread('/home/Computer_Vision_PA1/HR.png', cv2.IMREAD_GRAYSCALE)
 # define low resolution image input
 # which refers to bilinear downsampling(I_h)
 I_l = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
+
+# start the gradient descent
+# define the max iteration count
