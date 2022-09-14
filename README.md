@@ -1,7 +1,7 @@
 # CV_assignment1
 Programming assignment 1 for computer vision course.
 
-## dependencies
+## Dependencies
 * python version: python 3.10
 * numpy, openCV is used in this project
 
