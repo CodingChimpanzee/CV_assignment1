@@ -7,6 +7,25 @@
 import numpy as np
 import cv2
 
+# this is for progress bar
+from tqdm import tqdm
+import time
+
+#---------------------------------------------------------------------------------#
+
+# MSE, PSNR definition
+def MSE(image_gt, image_h, width, height):
+    difference_square = 0
+    for i in range(height):
+        for j in range(width):
+            temp = image_gt[i][j] - image_h[i][j]
+            difference_square += np.square(temp)
+    return np.divide(difference_square, height*width)
+
+def PSNR(image_gt, mse):
+    r = np.amax(image_gt)
+    return 10*np.log10(np.divide(r**2, mse))
+
 #---------------------------------------------------------------------------------#
 
 # import upsampled image as greyscale (I_h0)
@@ -24,6 +43,13 @@ I_gt = cv2.cvtColor(I_gt, cv2.COLOR_BGR2GRAY)
 # which refers to bilinear downsampling(I_h)
 I_l = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
+# Display before image MSE, PSNR value
+mse = MSE(I_gt, I_h, width, height)
+psnr = PSNR(I_gt, mse)
+print("Image import success! Here's upscaled image's MSE, PSNR value.")
+print("MSE value: ", mse)
+print("PSNR value: ", psnr)
+
 #---------------------------------------------------------------------------------#
 
 # start the gradient descent
@@ -31,7 +57,7 @@ I_l = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 MAX_ITER = 10000
 counter = 0
 alpha = 0.03
-while counter < MAX_ITER:
+for counter in tqdm(range(0, MAX_ITER)):
     counter += 1
     
     # gradient value
@@ -43,23 +69,13 @@ while counter < MAX_ITER:
 
 #---------------------------------------------------------------------------------#
 
-# check the loss
+# check the loss and error
 e = np.square(I_l - cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR))
 
-# check the MSE and PSNR
+mse = MSE(I_gt, I_h, width, height)
+psnr = PSNR(I_gt, mse)
 
-# MSE part
-difference_square = 0
-for i in range(height):
-    for j in range(width):
-        temp = I_gt[i][j] - I_h[i][j]
-        difference_square += np.square(temp)
-mse = np.divide(difference_square, height*width)
-
-# PSNR part
-r = np.amax(I_gt)
-psnr = 10*np.log10(np.divide(r**2, mse))
-
+print("Iteration complete! Here's processed image's MSE, PSNR value.")
 print("MSE value: ", mse)
 print("PSNR value: ", psnr)
 
