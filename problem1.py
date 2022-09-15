@@ -44,6 +44,7 @@ psnr = PSNR(I_gt, mse)
 print("Image import success! Here's upscaled image's MSE, PSNR value.")
 print("MSE value: ", mse)
 print("PSNR value: ", psnr)
+print("Error: ", np.sum(np.square(cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l)))
 
 #---------------------------------------------------------------------------------#
 
@@ -51,7 +52,7 @@ print("PSNR value: ", psnr)
 # define the max iteration count
 MAX_ITER = 10000
 counter = 0
-alpha = 1.8
+alpha = 0.9
 for counter in tqdm(range(0, MAX_ITER)):
     counter += 1
     
@@ -62,10 +63,12 @@ for counter in tqdm(range(0, MAX_ITER)):
     # Update the value
     I_h = np.subtract(I_h, np.multiply(alpha, grad))
 
+    # This is an error calculation part for the debugging process
+    # e = np.square(difference)
+    # print(np.sum(e))
+
 #---------------------------------------------------------------------------------#
 
-# check the loss and error
-e = np.square(I_l - cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR))
 
 mse = MSE(I_gt, I_h, width, height)
 psnr = PSNR(I_gt, mse)
@@ -73,6 +76,7 @@ psnr = PSNR(I_gt, mse)
 print("Iteration complete! Here's processed image's MSE, PSNR value.")
 print("MSE value: ", mse)
 print("PSNR value: ", psnr)
+print("Error: ", np.sum(np.square(cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l)))
 
 # save the image
 cv2.imwrite('/home/Computer_Vision_PA1/problem1.png', I_h)

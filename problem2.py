@@ -70,9 +70,9 @@ grad_prior = Gamma*laplacian*np.divide(G_t, G_lu)
 
 # Iteration part (gradient descent)
 # Define beta(hyperparameter) and iteration time
-Alpha = 1.3
+Alpha = 1.2
 Beta = 0.001
-MAX_ITER = 10000
+MAX_ITER = 1000
 counter = 0
 
 for counter in tqdm(range(0, MAX_ITER)):
