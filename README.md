@@ -1,4 +1,4 @@
-# CV_assignment1
+# Computer Vision Programming Assignment 1
 Programming assignment 1 for computer vision course.
 
 ## Dependencies
@@ -10,6 +10,8 @@ Programming assignment 1 for computer vision course.
 # install dependencies
 pip install numpy
 pip install opencv-python
+
+# only if libgl is not installed
 sudo apt-get install libgl1-mesa-glx
 sudo apt-get install libglib2.0-0
 
