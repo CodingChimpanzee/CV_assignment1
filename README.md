@@ -3,13 +3,14 @@ Programming assignment 1 for computer vision course.
 
 ## Dependencies
 * python version: python 3.10
-* numpy, openCV
+* numpy, openCV, tqdm
 
 ## Usage
 ```bash
 # install dependencies
 pip install numpy
 pip install opencv-python
+pip install tqdm
 
 # only if libgl is not installed
 sudo apt-get install libgl1-mesa-glx
