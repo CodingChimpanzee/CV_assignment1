@@ -3,7 +3,7 @@ Programming assignment 1 for computer vision course.
 
 ## Dependencies
 * python version: python 3.10
-* numpy, openCV is used in this project
+* numpy, openCV
 
 ## Usage
 ```bash
@@ -18,6 +18,7 @@ sudo apt-get install libglib2.0-0
 # run codes
 python3 problem1.py
 python3 problem2.py
+python3 addtional_method.py
 ```
 
 ## Components
@@ -27,3 +28,4 @@ python3 problem2.py
 * problem1.py: Solution for problem 1
 * problem2.py: Solution for problem 2
 * problem1.png: Result image from problem1.py code
+* problem2.png: Result image from problem2.py code
