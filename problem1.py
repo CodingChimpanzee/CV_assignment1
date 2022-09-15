@@ -9,7 +9,6 @@ import cv2
 
 # this is for progress bar
 from tqdm import tqdm
-import time
 
 #---------------------------------------------------------------------------------#
 
