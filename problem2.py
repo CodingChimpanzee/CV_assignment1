@@ -15,11 +15,7 @@ import time
 
 # MSE, PSNR definition
 def MSE(image_gt, image_h, width, height):
-    difference_square = 0
-    for i in range(height):
-        for j in range(width):
-            temp = image_gt[i][j] - image_h[i][j]
-            difference_square += np.square(temp)
+    difference_square = np.sum(np.square(image_gt-image_h))
     return np.divide(difference_square, height*width)
 
 def PSNR(image_gt, mse):
@@ -41,7 +37,7 @@ I_gt = cv2.cvtColor(I_gt, cv2.COLOR_BGR2GRAY)
 
 # define low resolution image input
 # which refers to bilinear downsampling(I_h)
-I_l = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
+I_l = cv2.resize(I_gt, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
 # Display before image MSE, PSNR value
 mse = MSE(I_gt, I_h, width, height)
@@ -75,7 +71,7 @@ grad_prior = Gamma*laplacian*np.divide(G_t, G_lu)
 
 # Iteration part (gradient descent)
 # Define beta(hyperparameter) and iteration time
-Alpha = 0.03
+Alpha = 1.3
 Beta = 0.001
 MAX_ITER = 10000
 counter = 0

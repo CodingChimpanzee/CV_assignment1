@@ -15,11 +15,7 @@ import time
 
 # MSE, PSNR definition
 def MSE(image_gt, image_h, width, height):
-    difference_square = 0
-    for i in range(height):
-        for j in range(width):
-            temp = image_gt[i][j] - image_h[i][j]
-            difference_square += np.square(temp)
+    difference_square = np.sum(np.square(image_gt-image_h))
     return np.divide(difference_square, height*width)
 
 def PSNR(image_gt, mse):
@@ -41,7 +37,7 @@ I_gt = cv2.cvtColor(I_gt, cv2.COLOR_BGR2GRAY)
 
 # define low resolution image input
 # which refers to bilinear downsampling(I_h)
-I_l = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
+I_l = cv2.resize(I_gt, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
 # Display before image MSE, PSNR value
 mse = MSE(I_gt, I_h, width, height)
@@ -56,7 +52,7 @@ print("PSNR value: ", psnr)
 # define the max iteration count
 MAX_ITER = 10000
 counter = 0
-alpha = 0.03
+alpha = 1.8
 for counter in tqdm(range(0, MAX_ITER)):
     counter += 1
     
@@ -65,7 +61,7 @@ for counter in tqdm(range(0, MAX_ITER)):
     grad = cv2.resize(difference, (height, width))
 
     # Update the value
-    I_h = I_h - alpha*grad
+    I_h = np.subtract(I_h, np.multiply(alpha, grad))
 
 #---------------------------------------------------------------------------------#
 
