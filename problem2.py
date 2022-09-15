@@ -7,6 +7,14 @@
 import numpy as np
 import cv2
 
+# define normalize funciton
+def normalize(matrix):
+
+
+
+    return matrix
+
+
 # import upsampled image as greyscale (I_h0)
 I_h = cv2.imread('/home/Computer_Vision_PA1/upsampled.png', cv2.IMREAD_GRAYSCALE)
 
@@ -20,5 +28,7 @@ I_gt = cv2.imread('/home/Computer_Vision_PA1/HR.png', cv2.IMREAD_GRAYSCALE)
 # which refers to bilinear downsampling(I_h)
 I_l = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
-# start the gradient descent
-# define the max iteration count
+# define gamma
+Gamma = 6
+cv2.Sobel(I_h, )
+
