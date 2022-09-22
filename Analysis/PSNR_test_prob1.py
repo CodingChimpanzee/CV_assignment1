@@ -47,10 +47,11 @@ I_l = cv2.resize(I_gt, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
 #---------------------------------------------------------------------------------#
 
-ITERATION_TIME = 100
+ITERATION_TIME = 10000
 
 # MSE, PSNR Values
-alpha = 0.5
+alpha = 0.1
+init_alpha = alpha
 alpha_val = []
 mse_val = []
 psnr_val = []
@@ -78,17 +79,31 @@ for i in tqdm(range(0, ITERATION_TIME)):
     mse_val.append(mse)
     psnr_val.append(psnr)
     alpha_val.append(alpha)
-    alpha = alpha + 1/ITERATION_TIME
+    alpha += 0.000024
 
 #---------------------------------------------------------------------------------#
 
-# Plotting part
-plt.figure(figsize = (15, 10))
-plt.plot(alpha_val, mse_val, color = 'black')
-plt.title("Tendency between MSE and step size")
-plt.axhline(0, color='black')
-plt.axvline(0, color='black')
-plt.xlabel('Step size value', fontsize = 20)
-plt.ylabel('MSE value', fontsize = 20)
+# # Plotting part
+# plt.figure(figsize = (15, 10))
+# plt.plot(alpha_val, mse_val, color = 'black')
+# plt.title("Tendency between MSE and step size (at 1000 iteration)", fontsize = 20)
+# plt.axhline(500, color='black')
+# plt.axvline(init_alpha, color='black')
+# plt.xlabel('Step size value', fontsize = 17)
+# plt.ylabel('MSE value', fontsize = 17)
 
-plt.savefig("Problem1_MSE.png", dpi=300)
+# plt.savefig("Problem1_MSE.png", dpi=300)
+
+# plt.figure(figsize = (15, 10))
+# plt.plot(alpha_val, psnr_val, color = 'black')
+# plt.title("Tendency between PSNR and step size (at 1000 iteration)", fontsize = 20)
+# plt.axhline(30, color='black')
+# plt.axvline(init_alpha, color='black')
+# plt.xlabel('Step size value', fontsize = 17)
+# plt.ylabel('MSE value', fontsize = 17)
+
+# plt.savefig("Problem1_PSNR.png", dpi=300)
+
+np.save("/home/Computer_Vision_PA1/Analysis/alpha_val.npy", alpha_val)
+np.save("/home/Computer_Vision_PA1/Analysis/mse_val.npy", mse_val)
+np.save("/home/Computer_Vision_PA1/Analysis/psnr_val.npy", psnr_val)
