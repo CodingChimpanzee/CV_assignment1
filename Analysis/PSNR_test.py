@@ -2,13 +2,16 @@
 # This code is written by
 # 20175003 Sunghyun Kang
 
-# Problem 1 (gradient descent without prior)
-# import two dependencies
+# PSNR Analysis for this HW
+
 import numpy as np
 import cv2
 
-# this is for progress bar
+# This is for progress bar
 from tqdm import tqdm
+
+# This is for plotting
+import matplotlib.pyplot as plt
 
 #---------------------------------------------------------------------------------#
 
@@ -42,43 +45,50 @@ I_gt = np.array(I_gt, dtype = float)
 # which refers to bilinear downsampling(I_h)
 I_l = cv2.resize(I_gt, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
-# Display before image MSE, PSNR value
-mse = MSE(I_gt, I_h, width, height)
-psnr = PSNR(I_gt, mse)
-print("Image import success! Here's upscaled image's MSE, PSNR value.")
-print("MSE value: ", mse)
-print("PSNR value: ", psnr)
-print("Error: ", np.sum(np.square(cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l)))
+#---------------------------------------------------------------------------------#
+
+ITERATION_TIME = 100
+
+# MSE, PSNR Values
+alpha = 0.5
+alpha_val = []
+mse_val = []
+psnr_val = []
+
+for i in tqdm(range(0, ITERATION_TIME)):
+
+    # start the gradient descent
+    # define the max iteration count
+    MAX_ITER = 1000
+    for counter in range(0, MAX_ITER):
+        
+        # gradient value
+        difference = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l
+        grad = cv2.resize(difference, (height, width))
+
+        # Update the value
+        I_h = np.subtract(I_h, np.multiply(alpha, grad))
+
+        # This is an error calculation part for the debugging process
+        # e = np.square(difference)
+        # print(np.sum(e))
+
+    mse = MSE(I_gt, I_h, width, height)
+    psnr = PSNR(I_gt, mse)
+    mse_val.append(mse)
+    psnr_val.append(psnr)
+    alpha_val.append(alpha)
+    alpha = alpha + 1/ITERATION_TIME
 
 #---------------------------------------------------------------------------------#
 
-# start the gradient descent
-# define the max iteration count
-MAX_ITER = 1000
-alpha = 0.9
-for counter in tqdm(range(0, MAX_ITER)):
-    
-    # gradient value
-    difference = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l
-    grad = cv2.resize(difference, (height, width))
+# Plotting part
+plt.figure(figsize = (15, 10))
+plt.plot(alpha_val, mse_val, color = 'black')
+plt.title("Tendency between MSE and step size")
+plt.axhline(0, color='black')
+plt.axvline(0, color='black')
+plt.xlabel('Step size value', fontsize = 20)
+plt.ylabel('MSE value', fontsize = 20)
 
-    # Update the value
-    I_h = np.subtract(I_h, np.multiply(alpha, grad))
-
-    # This is an error calculation part for the debugging process
-    # e = np.square(difference)
-    # print(np.sum(e))
-
-#---------------------------------------------------------------------------------#
-
-
-mse = MSE(I_gt, I_h, width, height)
-psnr = PSNR(I_gt, mse)
-
-print("Iteration complete! Here's processed image's MSE, PSNR value.")
-print("MSE value: ", mse)
-print("PSNR value: ", psnr)
-print("Error: ", np.sum(np.square(cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l)))
-
-# save the image
-cv2.imwrite('/home/Computer_Vision_PA1/problem1.png', I_h)
+plt.savefig("Problem1_MSE.png", dpi=300)

@@ -84,10 +84,8 @@ grad_prior = Gamma*laplacian*np.divide(G_t, G_h0)
 Alpha = 1.2
 Beta = 0.001
 MAX_ITER = 1000
-counter = 0
 
 for counter in tqdm(range(0, MAX_ITER)):
-    counter += 1
     
     updated_laplacian = cv2.Laplacian(I_h, -1)
     
