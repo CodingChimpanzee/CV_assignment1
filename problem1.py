@@ -26,6 +26,8 @@ def PSNR(image_gt, mse):
 # import upsampled image as greyscale (I_h0)
 I_h = cv2.imread('/home/Computer_Vision_PA1/upsampled.png')
 I_h = cv2.cvtColor(I_h, cv2.COLOR_BGR2GRAY)
+# Change the form into float type
+I_h = np.array(I_h, dtype = float)
 
 # find the height and width of the image
 height, width = I_h.shape
@@ -33,6 +35,8 @@ height, width = I_h.shape
 # import the ground_truth image
 I_gt = cv2.imread('/home/Computer_Vision_PA1/HR.png')
 I_gt = cv2.cvtColor(I_gt, cv2.COLOR_BGR2GRAY)
+# Change the form into float type
+I_gt = np.array(I_gt, dtype = float)
 
 # define low resolution image input
 # which refers to bilinear downsampling(I_h)
