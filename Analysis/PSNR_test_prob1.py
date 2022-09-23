@@ -10,9 +10,6 @@ import cv2
 # This is for progress bar
 from tqdm import tqdm
 
-# This is for plotting
-import matplotlib.pyplot as plt
-
 #---------------------------------------------------------------------------------#
 
 # MSE, PSNR definition
@@ -79,31 +76,11 @@ for i in tqdm(range(0, ITERATION_TIME)):
     mse_val.append(mse)
     psnr_val.append(psnr)
     alpha_val.append(alpha)
-    alpha += 0.000024
+    alpha += 0.00023
 
 #---------------------------------------------------------------------------------#
 
-# # Plotting part
-# plt.figure(figsize = (15, 10))
-# plt.plot(alpha_val, mse_val, color = 'black')
-# plt.title("Tendency between MSE and step size (at 1000 iteration)", fontsize = 20)
-# plt.axhline(500, color='black')
-# plt.axvline(init_alpha, color='black')
-# plt.xlabel('Step size value', fontsize = 17)
-# plt.ylabel('MSE value', fontsize = 17)
-
-# plt.savefig("Problem1_MSE.png", dpi=300)
-
-# plt.figure(figsize = (15, 10))
-# plt.plot(alpha_val, psnr_val, color = 'black')
-# plt.title("Tendency between PSNR and step size (at 1000 iteration)", fontsize = 20)
-# plt.axhline(30, color='black')
-# plt.axvline(init_alpha, color='black')
-# plt.xlabel('Step size value', fontsize = 17)
-# plt.ylabel('MSE value', fontsize = 17)
-
-# plt.savefig("Problem1_PSNR.png", dpi=300)
-
+# Save the value
 np.save("/home/Computer_Vision_PA1/Analysis/alpha_val.npy", alpha_val)
 np.save("/home/Computer_Vision_PA1/Analysis/mse_val.npy", mse_val)
 np.save("/home/Computer_Vision_PA1/Analysis/psnr_val.npy", psnr_val)
