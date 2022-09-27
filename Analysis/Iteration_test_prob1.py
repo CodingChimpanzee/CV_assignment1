@@ -1,3 +1,5 @@
+# Iteration test for problem 1
+
 # Computer vision programming assignment 1
 # This code is written by
 # 20175003 Sunghyun Kang
@@ -44,21 +46,21 @@ I_l = cv2.resize(I_gt, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
 
 #---------------------------------------------------------------------------------#
 
-ITERATION_TIME = 1000
+ITERATION_TIME = 100
 
 # MSE, PSNR Values
-alpha = 0.0001
+alpha = 0.002
 init_alpha = alpha
-alpha_val = []
+iter_times = []
 mse_val = []
 psnr_val = []
+iter = 100
 
 for i in tqdm(range(0, ITERATION_TIME)):
 
     # start the gradient descent
     # define the max iteration count
-    MAX_ITER = 1000
-    for counter in range(0, MAX_ITER):
+    for counter in range(0, iter):
         
         # gradient value
         difference = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR) - I_l
@@ -75,12 +77,12 @@ for i in tqdm(range(0, ITERATION_TIME)):
     psnr = PSNR(I_gt, mse)
     mse_val.append(mse)
     psnr_val.append(psnr)
-    alpha_val.append(alpha)
-    alpha += 0.0001
+    iter_times.append(iter)
+    iter += 100
 
 #---------------------------------------------------------------------------------#
 
 # Save the value
-np.save("/home/Computer_Vision_PA1/Analysis/alpha_val.npy", alpha_val)
-np.save("/home/Computer_Vision_PA1/Analysis/mse_val.npy", mse_val)
-np.save("/home/Computer_Vision_PA1/Analysis/psnr_val_small.npy", psnr_val)
+np.save("/home/Computer_Vision_PA1/Analysis/iter_val_1.npy", iter_times)
+np.save("/home/Computer_Vision_PA1/Analysis/iter_mse_val_1.npy", mse_val)
+np.save("/home/Computer_Vision_PA1/Analysis/iter_psnr_val_1.npy", psnr_val)

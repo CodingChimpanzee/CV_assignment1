@@ -1,3 +1,5 @@
+# Iteration test for problem 1
+
 # Computer vision programming assignment 1
 # This code is written by
 # 20175003 Sunghyun Kang
@@ -9,9 +11,6 @@ import cv2
 
 # This is for progress bar
 from tqdm import tqdm
-
-# This is for plotting
-import matplotlib.pyplot as plt
 
 #---------------------------------------------------------------------------------#
 
@@ -75,21 +74,21 @@ grad_prior = Gamma*laplacian*np.divide(G_t, G_h0)
 
 #---------------------------------------------------------------------------------#
 
-ITERATION_TIME = 2000
-MAX_ITER = 1000
+ITERATION_TIME = 100
 
 # MSE, PSNR Values
-Alpha = 0.1
+Alpha = 0.002
 Beta = 0.001
-init_alpha = Alpha
-alpha_val = []
+iter_times = []
 mse_val = []
 psnr_val = []
+iter = 100
 
 for i in tqdm(range(0, ITERATION_TIME)):
 
     # start the gradient descent
-    for counter in range(0, MAX_ITER):
+    # define the max iteration count
+    for counter in range(0, iter):
         
         updated_laplacian = cv2.Laplacian(I_h, -1)
         
@@ -107,12 +106,12 @@ for i in tqdm(range(0, ITERATION_TIME)):
     psnr = PSNR(I_gt, mse)
     mse_val.append(mse)
     psnr_val.append(psnr)
-    alpha_val.append(Alpha)
-    Alpha += 0.001
+    iter_times.append(iter)
+    iter += 100
 
 #---------------------------------------------------------------------------------#
 
 # Save the value
-np.save("/home/Computer_Vision_PA1/Analysis/alpha_val_big_2.npy", alpha_val)
-np.save("/home/Computer_Vision_PA1/Analysis/mse_val_big_2.npy", mse_val)
-np.save("/home/Computer_Vision_PA1/Analysis/psnr_val_big_2.npy", psnr_val)
+np.save("/home/Computer_Vision_PA1/Analysis/iter_val_2.npy", iter_times)
+np.save("/home/Computer_Vision_PA1/Analysis/iter_mse_val_2.npy", mse_val)
+np.save("/home/Computer_Vision_PA1/Analysis/iter_psnr_val_2.npy", psnr_val)
