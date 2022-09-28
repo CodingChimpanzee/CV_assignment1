@@ -16,8 +16,8 @@ def MSE(image_gt, image_h, width, height):
     difference_square = np.sum(np.square(image_gt-image_h))
     return np.divide(difference_square, height*width)
 
-def PSNR(image_gt, mse):
-    r = np.amax(image_gt)
+def PSNR(mse):
+    r = 255
     return 10*np.log10(np.divide(r**2, mse))
 
 #---------------------------------------------------------------------------------#
@@ -67,23 +67,35 @@ S = np.around(-2 * np.log2(3/0.5))
 #---------------------------------------------------------------------------------#
 # One more additional method: Richardson-Lucy
 
-from numpy.fft import fftn, ifftn, fftshift 
+from scipy.ndimage import gaussian_filter
+from scipy.signal import convolve2d, fftconvolve
+from scipy import signal
+from tqdm import tqdm
 
-def richardson_lucy_np(image, psf, num_iters):
+def richardson_lucy_np(image, num_iters):
+    # image = image in 2d numpy array
+    # num_iters = number of iteration
     
-    otf = fftn(fftshift(psf))
-    otf_ = np.conjugate(otf)    #np.ones(image.shape)/image.sum()
-    estimate = image
+    # How to get PSF? 
+    # We will use blur kernel!: Gaussian filter
+    # We have to make all of it as furier transform
+    kernel = gaussian_filter(image, 1)
 
-    for i in range(num_iters):
-        #print(i)
-        
-        reblurred = ifftn(fftn(estimate) * otf)
-        ratio = image / (reblurred + 1e-30)
-        estimate = estimate * (ifftn(fftn(ratio) * otf_)).astype(float)
-        
+    reverse_kernel = np.flip(kernel)
 
-    return estimate
+    estimation = image
+    for i in tqdm(range(0, num_iters)):
+        # convolution = convolve2d(estimation, kernel, boundary='symm', mode='same')
+        convolution = fftconvolve(estimation, kernel, mode='same')
+        blur_relative = np.divide(image, convolution)
+        # estimate_error = convolve2d(blur_relative, reverse_kernel, boundary='symm', mode='same')
+        estimate_error = fftconvolve(blur_relative, reverse_kernel, mode='same')
+        estimation = np.multiply(estimation, estimate_error)
 
-img = richardson_lucy_np(I_gt, I_h, 1000)
-print(PSNR(I_gt, img))
+    return estimation
+
+result_is = richardson_lucy_np(I_h, 200)
+mse = MSE(I_gt, result_is, width, height)
+cv2.imwrite('/home/Computer_Vision_PA1/addtional.png', result_is)
+print(mse)
+print(PSNR(mse))
