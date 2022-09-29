@@ -29,6 +29,9 @@ I_h = cv2.cvtColor(I_h, cv2.COLOR_BGR2GRAY)
 # Change the form into float type
 I_h = np.array(I_h, dtype = float)
 
+# Clip the maximum value as 255
+I_h = np.clip(I_h, 0, 255)
+
 # find the height and width of the image
 height, width = I_h.shape
 
@@ -54,8 +57,8 @@ print("Error: ", np.sum(np.square(cv2.resize(I_h, (height//4, width//4), interpo
 
 # start the gradient descent
 # define the max iteration count
-MAX_ITER = 1000
-alpha = 0.9
+MAX_ITER = 10000
+alpha = 0.01
 for counter in tqdm(range(0, MAX_ITER)):
     
     # gradient value

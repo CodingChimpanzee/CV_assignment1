@@ -1,13 +1,15 @@
+# Iteration test for problem 1
+
 # Computer vision programming assignment 1
 # This code is written by
 # 20175003 Sunghyun Kang
 
-# Problem 2 (gradient descent with prior)
-# import two dependencies
+# PSNR Analysis for this HW
+
 import numpy as np
 import cv2
 
-# this is for progress bar
+# This is for progress bar
 from tqdm import tqdm
 
 #---------------------------------------------------------------------------------#
@@ -29,9 +31,6 @@ I_h = cv2.cvtColor(I_h, cv2.COLOR_BGR2GRAY)
 # Change the form into float type
 I_h = np.array(I_h, dtype = float)
 
-# Clip the maximum value as 255
-I_h = np.clip(I_h, 0, 255)
-
 # find the height and width of the image
 height, width = I_h.shape
 
@@ -41,25 +40,17 @@ I_gt = cv2.cvtColor(I_gt, cv2.COLOR_BGR2GRAY)
 # Change the form into float type
 I_gt = np.array(I_gt, dtype = float)
 
-# Clip the maximum value as 255
-I_gt = np.clip(I_gt, 0, 255)
-
 # define low resolution image input
 # which refers to bilinear downsampling(I_h)
 I_l = cv2.resize(I_gt, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
-
-# Display before image MSE, PSNR value
-mse = MSE(I_gt, I_h, width, height)
-psnr = PSNR(I_gt, mse)
-print("Image import success! Here's upscaled image's MSE, PSNR value.")
-print("MSE value: ", mse)
-print("PSNR value: ", psnr)
 
 #---------------------------------------------------------------------------------#
 
 # Prior part, please be careful with normalization part
 # 1. define hyperparameter gamma and get gradient of I_h
-Gamma = 6.0
+
+Gamma = 6
+
 x_dir = cv2.Sobel(I_h, -1, dx = 1, dy = 0)
 y_dir = cv2.Sobel(I_h, -1, dx = 0, dy = 1)
 un_normalized_val = np.abs(x_dir) + np.abs(y_dir)
@@ -82,40 +73,45 @@ G_t = np.clip(G_t, a_min = 0.0, a_max = 1.0)
 
 # 4. Now get the gradient of prior
 grad_prior = Gamma*laplacian*np.divide(G_t, G_h0)
-grad_prior = np.clip(grad_prior, 0.0, 255.0)
 
 #---------------------------------------------------------------------------------#
 
-# Iteration part (gradient descent)
-# Define beta(hyperparameter) and iteration time
-Alpha = 0.01
-Beta = 0.007
-MAX_ITER = 10000
+beta_val = []
+mse_val = []
+psnr_val = []
+# MSE, PSNR Values
+Alpha = 0.002
+Beta = 0.0001
+iter = 1000
 
-for counter in tqdm(range(0, MAX_ITER)):
-    
-    updated_laplacian = cv2.Laplacian(I_h, -1)
-    
-    I_dt = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
-    difference = I_dt - I_l
+for i in tqdm(range(1000)):
 
-    # Get the prior and update gradient
-    prior = Beta*(updated_laplacian - grad_prior)
-    updated_grad = cv2.resize(difference, (height, width)) - prior
-    
-    # Update the value
-    I_h = I_h - Alpha*updated_grad
+    # start the gradient descent
+    # define the max iteration count
+    for counter in range(0, iter):
+        
+        updated_laplacian = cv2.Laplacian(I_h, -1)
+        
+        I_dt = cv2.resize(I_h, (height//4, width//4), interpolation = cv2.INTER_LINEAR)
+        difference = I_dt - I_l
+
+        # Get the prior and update gradient
+        prior = Beta*(updated_laplacian - grad_prior)
+        updated_grad = cv2.resize(difference, (height, width)) - prior
+        
+        # Update the value
+        I_h = I_h - Alpha*updated_grad
+
+    mse = MSE(I_gt, I_h, width, height)
+    psnr = PSNR(I_gt, mse)
+    mse_val.append(mse)
+    psnr_val.append(psnr)
+    beta_val.append(Beta)
+    Beta += 0.0001
 
 #---------------------------------------------------------------------------------#
 
-# check the MSE and PSNR
-
-print("Iteration complete! Here's processed image's MSE, PSNR value.")
-mse = MSE(I_gt, I_h, width, height)
-psnr = PSNR(I_gt, mse)
-
-print("MSE value: ", mse)
-print("PSNR value: ", psnr)
-
-# save the image
-cv2.imwrite('/home/Computer_Vision_PA1/problem2.png', I_h)
+# Save the value
+np.save("/home/Computer_Vision_PA1/Analysis/beta_val_2.npy", beta_val)
+np.save("/home/Computer_Vision_PA1/Analysis/beta_mse_val_2.npy", mse_val)
+np.save("/home/Computer_Vision_PA1/Analysis/beta_psnr_val_2.npy", psnr_val)
