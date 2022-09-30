@@ -28,5 +28,12 @@ python3 addtional_method.py
 
 * problem1.py: Solution for problem 1
 * problem2.py: Solution for problem 2
+* additional_method.py: My additional method implementation
+* KERNEL.csv: Blur kernel matrix for additional method
 * problem1.png: Result image from problem1.py code
 * problem2.png: Result image from problem2.py code
+* additional.png: Result form additional image
+
+## Directories
+* Analysis: To see hyperparameter tendencies
+* Figures: Figures that used for the report
