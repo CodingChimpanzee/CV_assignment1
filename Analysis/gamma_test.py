@@ -19,23 +19,25 @@ def MSE(image_gt, image_h, width, height):
     difference_square = np.sum(np.square(image_gt-image_h))
     return np.divide(difference_square, height*width)
 
-def PSNR(image_gt, mse):
-    r = np.amax(image_gt)
+def PSNR(mse):
+    r = 255.0
     return 10*np.log10(np.divide(r**2, mse))
 
 #---------------------------------------------------------------------------------#
 
 # import upsampled image as greyscale (I_h0)
-I_h = cv2.imread('/home/Computer_Vision_PA1/upsampled.png')
+I_h = cv2.imread('../Images/upsampled.png')
 I_h = cv2.cvtColor(I_h, cv2.COLOR_BGR2GRAY)
 # Change the form into float type
 I_h = np.array(I_h, dtype = float)
+# Clip the maximum value as 255
+I_h = np.clip(I_h, 0, 255)
 
 # find the height and width of the image
 height, width = I_h.shape
 
 # import the ground_truth image
-I_gt = cv2.imread('/home/Computer_Vision_PA1/HR.png')
+I_gt = cv2.imread('../Images/HR.png')
 I_gt = cv2.cvtColor(I_gt, cv2.COLOR_BGR2GRAY)
 # Change the form into float type
 I_gt = np.array(I_gt, dtype = float)
@@ -81,7 +83,6 @@ for i in tqdm(range(1000)):
 
 #---------------------------------------------------------------------------------#
 
-
     # MSE, PSNR Values
     Alpha = 0.002
     Beta = 0.001
@@ -104,7 +105,7 @@ for i in tqdm(range(1000)):
         I_h = I_h - Alpha*updated_grad
 
     mse = MSE(I_gt, I_h, width, height)
-    psnr = PSNR(I_gt, mse)
+    psnr = PSNR(mse)
     mse_val.append(mse)
     psnr_val.append(psnr)
     gamma_val.append(Gamma)
@@ -113,6 +114,6 @@ for i in tqdm(range(1000)):
 #---------------------------------------------------------------------------------#
 
 # Save the value
-np.save("/home/Computer_Vision_PA1/Analysis/gamma_val_2.npy", gamma_val)
-np.save("/home/Computer_Vision_PA1/Analysis/gamma_mse_val_2.npy", mse_val)
-np.save("/home/Computer_Vision_PA1/Analysis/gamma_psnr_val_2.npy", psnr_val)
+np.save("../Analysis/gamma_val_2.npy", gamma_val)
+np.save("../Analysis/gamma_mse_val_2.npy", mse_val)
+np.save("../Analysis/gamma_psnr_val_2.npy", psnr_val)

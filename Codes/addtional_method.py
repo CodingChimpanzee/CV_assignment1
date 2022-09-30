@@ -29,7 +29,6 @@ I_h = cv2.imread('../Images/upsampled.png')
 I_h = cv2.cvtColor(I_h, cv2.COLOR_BGR2GRAY)
 # Change the form into float type
 I_h = np.array(I_h, dtype = np.float32)
-
 # Clip the maximum value as 255
 I_h = np.clip(I_h, 0, 255)
 
