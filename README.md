@@ -1,5 +1,7 @@
 # Computer Vision Programming Assignment 1
 Programming assignment 1 for computer vision course.
+- Super resolution using gradient descent
+- Super resolution using blur kernel and modified Rechardson-Lucy deconvolution
 
 ## Dependencies
 * python version: python v.3.10
